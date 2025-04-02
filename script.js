@@ -1,8 +1,9 @@
 // console.log("Welcome to music world");
 // let songIndex = 0;
-// //let audioElement = new Audio('songs/English songs/Feel my face.mp3');
+// console.log(audioElement);
+// audioElement.play();
 // //let audioElement = new Audio('songs/English songs/Bam Bam.mp3');
-// let masterPlay = document.getElementById('masterPlay');
+// let  = document.getElementById('masterPlay');
 // let myProgressBar = document.getElementById('myProgressBar')
 // let gif = document.getElementById('gif');
 // let songItems = Array.from(document.getElementsByClassName('songItem'));
@@ -15,7 +16,7 @@
 //     { songName: "", filepath: "", coverpath: "" },
 //     { songName: "", filepath: "", coverpath: "" },
 //     { songName: "", filepath: "", coverpath: "" },
-    
+
 // ]
 
 // songItems.forEach((element, i) => {
@@ -53,6 +54,24 @@
 // )
 
 
+let audioElement = new Audio('assets/songs/Faded(PaglaSongs).mp3');
+let icons = document.querySelectorAll('.icons li')[1];
 
+icons.addEventListener('click', () => {
+    if (audioElement.paused || audioElement.currentTime <= 0) {
+        audioElement.play();
+    }
+    else {
+        audioElement.pause();
+    }
+});
 
+audioElement.addEventListener('timeupdate', () => {
+    // update seekbar
+    progress = parseInt(audioElement.currentTime / audioElement.duration * 100);
+    myProgressBar.value = progress;
+});
 
+myProgressBar.addEventListener('change', () => {
+    audioElement.currentTime = myProgressBar.value * audioElement.duration / 100;
+});
