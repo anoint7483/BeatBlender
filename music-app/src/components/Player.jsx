@@ -5,15 +5,14 @@ export default function Player() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [volume, setVolume] = useState(1);
   const { currentSong, playNext, playPrev } = usePlayer();
-  const [volume, setVolume] = useState(1); // 0 to 1
 
   useEffect(() => {
     if (currentSong && audioRef.current) {
       const audio = audioRef.current;
       audio.pause();
       audio.load();
-
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise
@@ -41,9 +40,13 @@ export default function Player() {
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    if (isPlaying) audioRef.current.pause();
-    else audioRef.current.play();
-    setIsPlaying(!isPlaying);
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
   };
 
   const handleSeek = (e) => {
@@ -57,9 +60,9 @@ export default function Player() {
 
   return (
     <div className="bg-gray-800 text-white p-4 sm:p-6 fixed bottom-0 left-0 right-0 z-50 shadow-xl rounded-t-xl">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
         {/* Song Info */}
-        <div className="flex flex-col items-center sm:flex-row sm:items-center gap-2 w-full lg:w-1/3">
+        <div className="flex flex-col items-center sm:flex-row sm:items-center gap-3 w-full lg:w-1/3">
           {currentSong && (
             <>
               <img
@@ -79,7 +82,7 @@ export default function Player() {
           )}
         </div>
 
-        {/* Controls Centered on Desktop */}
+        {/* Controls */}
         <div className="flex justify-center items-center gap-4 w-full lg:w-1/3 order-1 lg:order-none">
           <button onClick={playPrev} className="text-xl sm:text-2xl">⏮️</button>
           <button onClick={togglePlay} className="text-2xl sm:text-3xl">
@@ -88,19 +91,21 @@ export default function Player() {
           <button onClick={playNext} className="text-xl sm:text-2xl">⏭️</button>
         </div>
 
-        {/* Volume */}
-        <div className="flex items-center justify-center gap-2 w-full lg:w-1/3">
-          <label htmlFor="volume">🔊</label>
-          <input
-            id="volume"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-full sm:w-28 md:w-32 cursor-pointer"
-          />
+        {/* Volume - Responsive layout */}
+        <div className="w-full lg:w-1/3 flex justify-center lg:justify-end">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-center lg:justify-end mt-2 sm:mt-0">
+            <label htmlFor="volume" className="text-lg">🔊</label>
+            <input
+              id="volume"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              className="w-40 sm:w-32 md:w-40 cursor-pointer"
+            />
+          </div>
         </div>
       </div>
 
@@ -114,6 +119,7 @@ export default function Player() {
         className="w-full mt-4 cursor-pointer"
       />
 
+      {/* Audio Element */}
       <audio ref={audioRef}>
         <source src={currentSong?.url} type="audio/mpeg" />
       </audio>

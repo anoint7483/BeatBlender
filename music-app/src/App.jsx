@@ -13,18 +13,20 @@ import Recent from './Pages/Recent';
 export default function App() {
   return (
     <Router>
-      <div className="flex min-h-screen bg-gray-900 text-white overflow-hidden">
-        {/* Sidebar: Hidden on small screens */}
-        <div className="hidden md:block">
+      <div className="h-screen flex overflow-hidden bg-gray-900 text-white">
+        {/* Sidebar - fixed on medium+ screens */}
+        <div className="hidden md:block fixed h-full w-64 bg-gray-850 z-40">
           <Sidebar />
         </div>
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col relative overflow-hidden">
-          {/* Sticky Navbar */}
-          <Navbar />
+        {/* Main area */}
+        <div className="flex-1 flex flex-col md:ml-64">
+          {/* Fixed Navbar */}
+          <div className="fixed w-full md:w-[calc(100%-16rem)] z-50 top-0">
+            <Navbar />
+          </div>
 
-          {/* Scrollable Content */}
+          {/* Scrollable Page Content */}
           <div className="flex-1 overflow-y-auto pt-20 pb-28 px-4">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -38,7 +40,9 @@ export default function App() {
           </div>
 
           {/* Fixed Bottom Music Player */}
-          <Player />
+          <div className="fixed bottom-0 w-full md:w-[calc(100%-16rem)] z-50">
+            <Player />
+          </div>
         </div>
       </div>
     </Router>

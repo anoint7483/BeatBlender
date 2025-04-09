@@ -1,15 +1,41 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, Search, Library } from 'lucide-react';
 
 export default function Sidebar({ isOpen }) {
+  const location = useLocation();
+
+  const navItems = [
+    { label: 'Home', path: '/', icon: <Home size={20} /> },
+    { label: 'Search', path: '/search', icon: <Search size={20} /> },
+    { label: 'Library', path: '/library', icon: <Library size={20} /> },
+  ];
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-64 bg-gray-900 p-6 z-40 transform transition-transform duration-300 ease-in-out
+      className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-gray-950 to-gray-900 p-6 z-50 transform transition-transform duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:static md:translate-x-0 md:flex md:flex-col md:w-64`}
     >
-      <nav className="flex flex-col gap-4 mt-16 md:mt-0">
-        <Link to="/" className="hover:text-yellow-400">Home</Link>
-        <Link to="/search" className="hover:text-yellow-400">Search</Link>
-        <Link to="/library" className="hover:text-yellow-400">Library</Link>
+      {/* Logo */}
+      <div className="text-2xl font-bold text-lime-400 mb-10">🎧 BeatBlender</div>
+
+      {/* Navigation */}
+      <nav className="flex flex-col gap-4">
+        {navItems.map(({ label, path, icon }) => (
+          <Link
+            to={path}
+            key={path}
+            className={`flex items-center gap-3 px-3 py-2 rounded transition-all duration-200 text-sm ${
+              isActive(path)
+                ? 'bg-gray-800 text-lime-400 font-medium'
+                : 'text-gray-300 hover:text-white hover:bg-gray-800'
+            }`}
+          >
+            {icon}
+            {label}
+          </Link>
+        ))}
       </nav>
     </div>
   );
